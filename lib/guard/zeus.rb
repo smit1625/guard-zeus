@@ -1,8 +1,8 @@
 require 'guard'
-require 'guard/guard'
+require 'guard/plugin'
 
 module Guard
-  class Zeus < Guard
+  class Zeus < Plugin
 
     autoload :Runner, 'guard/zeus/runner'
     attr_accessor :runner
@@ -29,8 +29,6 @@ module Guard
     def run_on_modifications(paths)
       runner.run(paths)
     end
-    # for guard 1.0.x and earlier
-    alias :run_on_change :run_on_modifications
 
     def stop
       runner.kill_zeus
