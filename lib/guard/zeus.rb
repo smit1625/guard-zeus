@@ -26,11 +26,11 @@ module Guard
       runner.run_all
     end
 
-    def run_on_changes(paths)
+    def run_on_modifications(paths)
       runner.run(paths)
     end
     # for guard 1.0.x and earlier
-    alias :run_on_change :run_on_changes
+    alias :run_on_change :run_on_modifications
 
     def stop
       runner.kill_zeus

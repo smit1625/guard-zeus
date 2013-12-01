@@ -39,15 +39,15 @@ describe Guard::Zeus do
     end
   end
 
-  describe '.run_on_changes' do
+  describe '.run_on_modifications' do
     it "calls Runner.run with file name" do
       subject.runner.should_receive(:run).with('file_name.rb')
-      subject.run_on_changes('file_name.rb')
+      subject.run_on_modifications('file_name.rb')
     end
 
     it "calls Runner.run with paths" do
       subject.runner.should_receive(:run).with(['spec/controllers', 'spec/requests'])
-      subject.run_on_changes(['spec/controllers', 'spec/requests'])
+      subject.run_on_modifications(['spec/controllers', 'spec/requests'])
     end
   end
 
