@@ -7,7 +7,7 @@ module Guard
     autoload :Runner, 'guard/zeus/runner'
     attr_accessor :runner
 
-    def initialize(watchers=[], options={})
+    def initialize(options={})
       super
       @runner = Runner.new(options)
     end

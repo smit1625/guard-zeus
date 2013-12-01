@@ -5,7 +5,7 @@ describe Guard::Zeus do
   describe '#initialize' do
     it "instantiates Runner with given options" do
       Guard::Zeus::Runner.should_receive(:new).with(:bundler => false)
-      Guard::Zeus.new [], { :bundler => false }
+      Guard::Zeus.new :bundler => false
     end
   end
 
