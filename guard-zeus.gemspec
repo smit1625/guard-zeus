@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'zeus', '~> 0'
 
   gem.add_development_dependency 'bundler', '~> 1.0'
-  gem.add_development_dependency 'rspec', '=> 2.14, < 4.0'
+  gem.add_development_dependency 'rspec', '~> 2.14'
 
   gem.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md]
   gem.require_path  = 'lib'
