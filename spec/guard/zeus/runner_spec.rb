@@ -22,9 +22,7 @@ describe Guard::Zeus::Runner do
       subject { Guard::Zeus::Runner.new :cli => '--time' }
 
       before do
-        subject.should_receive(:test_unit?).any_number_of_times.and_return(false)
-        subject.should_receive(:rspec?).any_number_of_times.and_return(true)
-        subject.should_receive(:bundler?).any_number_of_times.and_return(false)
+        subject.stub(test_unit?: false, rspec?: true, bundler?: false)
       end
 
       it "launches zeus start with cli options" do
@@ -35,9 +33,7 @@ describe Guard::Zeus::Runner do
 
     context 'with Test::Unit only' do
       before do
-        subject.should_receive(:test_unit?).any_number_of_times.and_return(true)
-        subject.should_receive(:rspec?).any_number_of_times.and_return(false)
-        subject.should_receive(:bundler?).any_number_of_times.and_return(false)
+        subject.stub(test_unit?: true, rspec?: false, bundler?: false)
       end
 
       it "launches zeus start for Test::Unit" do
@@ -48,9 +44,7 @@ describe Guard::Zeus::Runner do
 
     context 'with Test::Unit and Bundler' do
       before do
-        subject.should_receive(:test_unit?).any_number_of_times.and_return(true)
-        subject.should_receive(:rspec?).any_number_of_times.and_return(false)
-        subject.should_receive(:bundler?).any_number_of_times.and_return(true)
+        subject.stub(test_unit?: true, rspec?: false, bundler?: true)
       end
 
       it "launches zeus start for Test::Unit with 'bundle exec'" do
@@ -61,9 +55,7 @@ describe Guard::Zeus::Runner do
 
     context 'with RSpec only' do
       before do
-        subject.should_receive(:test_unit?).any_number_of_times.and_return(false)
-        subject.should_receive(:rspec?).any_number_of_times.and_return(true)
-        subject.should_receive(:bundler?).any_number_of_times.and_return(false)
+        subject.stub(test_unit?: false, rspec?: true, bundler?: false)
       end
 
       it "launches zeus start for RSpec" do
@@ -74,9 +66,7 @@ describe Guard::Zeus::Runner do
 
     context 'with Rspec and Bundler' do
       before do
-        subject.should_receive(:test_unit?).any_number_of_times.and_return(false)
-        subject.should_receive(:rspec?).any_number_of_times.and_return(true)
-        subject.should_receive(:bundler?).any_number_of_times.and_return(true)
+        subject.stub(test_unit?: false, rspec?: true, bundler?: true)
       end
 
       it "launches zeus start for RSpec with 'bundle exec'" do
