@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 # Specify your gem's dependencies in guard-spin.gemspec
 gemspec
 
-gem "guard-bundler", "~> 1.0.0"
+gem "guard-bundler", "~> 2.0"
 gem 'guard-rspec'
 
 if RbConfig::CONFIG['target_os'] =~ /darwin/i
