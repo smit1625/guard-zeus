@@ -15,6 +15,14 @@ module Guard
 
       def launch_zeus(action)
         UI.info "#{action}ing Zeus", :reset => true
+
+        if File.exist? sockfile
+          return if can_connect_to_socket?
+
+          # just delete it
+          File.delete(sockfile)
+        end
+
         spawn_zeus zeus_serve_command, zeus_serve_options
       end
 
@@ -37,8 +45,16 @@ module Guard
 
       private
 
+      # Return a truthy socket, or catch the thrown exception
+      # and return false
+      def can_connect_to_socket?
+        UNIXSocket.open(sockfile)
+      rescue Errno::ECONNREFUSED
+        false
+      end
+
       def sockfile
-          File.join(Dir.pwd, ".zeus.sock")
+        File.join(Dir.pwd, ".zeus.sock")
       end
 
       def run_command(cmd, options = '')

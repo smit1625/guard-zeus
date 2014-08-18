@@ -1,3 +1,8 @@
+## xxxx - August 19, 2014
+### New features
+
+ - Better handling for .zeus.sock: Remove if expired and connect if active ([@qnm](https://github.com/qnm))
+
 ## 0.3.0 - June 29, 2012
 
 ### New features

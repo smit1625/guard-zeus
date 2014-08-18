@@ -18,6 +18,54 @@ describe Guard::Zeus::Runner do
   end
 
   describe '.launch_zeus' do
+    context 'with no .zeus.sock' do
+      subject { Guard::Zeus::Runner.new }
+
+      before do
+        allow(File).to receive(:exist?).and_return(false)
+      end
+
+      it "launces zeus normally" do
+        expect(subject).to receive(:spawn_zeus)
+        subject.launch_zeus('Start')
+      end
+    end
+
+    context 'with expired .zeus.sock' do
+      subject { Guard::Zeus::Runner.new }
+      let(:sockfile) { double('sockfile') }
+
+      before do
+        allow(File).to receive(:exist?).and_return(true)
+        allow(UNIXSocket).to receive(:open).and_raise(Errno::ECONNREFUSED)
+        allow(subject).to receive(:sockfile).and_return(sockfile)
+      end
+
+      it "deletes expires .zeus.sock and launces zeus normally" do
+        expect(File).to receive(:delete).with(sockfile)
+        expect(subject).to receive(:spawn_zeus)
+        subject.launch_zeus('Start')
+      end
+    end
+
+    context 'with active .zeus.sock' do
+      subject { Guard::Zeus::Runner.new }
+      let(:sockfile) { double('sockfile') }
+      let(:socket) { double('socket') }
+
+      before do
+        allow(File).to receive(:exist?).and_return(true)
+        allow(UNIXSocket).to receive(:open).and_return(socket)
+        allow(subject).to receive(:sockfile).and_return(sockfile)
+      end
+
+      it "continues without starting zues and removing .zeus.sock" do
+        expect(File).to_not receive(:delete).with(sockfile)
+        expect(subject).to_not receive(:spawn_zeus)
+        subject.launch_zeus('Start')
+      end
+    end
+
     context 'with cli option' do
       subject { Guard::Zeus::Runner.new :cli => '--time' }
 
