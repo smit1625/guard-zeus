@@ -17,51 +17,47 @@ describe Guard::Zeus::Runner do
     end
   end
 
-  describe '.launch_zeus' do
-    context 'with no .zeus.sock' do
-      subject { Guard::Zeus::Runner.new }
+  describe '#launch_zeus' do
+    let(:sockfile) { double('sockfile') }
+    let(:socket) { double('socket') }
+    subject { Guard::Zeus::Runner.new }
 
+    context 'with no .zeus.sock' do
       before do
         allow(File).to receive(:exist?).and_return(false)
       end
 
-      it "launces zeus normally" do
+      it "launches zeus normally" do
+        expect(File).to_not receive(:delete).with(sockfile)
         expect(subject).to receive(:spawn_zeus)
         subject.launch_zeus('Start')
       end
     end
 
     context 'with expired .zeus.sock' do
-      subject { Guard::Zeus::Runner.new }
-      let(:sockfile) { double('sockfile') }
-
       before do
+        allow(subject).to receive(:sockfile).and_return(sockfile)
         allow(File).to receive(:exist?).and_return(true)
         allow(UNIXSocket).to receive(:open).and_raise(Errno::ECONNREFUSED)
-        allow(subject).to receive(:sockfile).and_return(sockfile)
       end
 
-      it "deletes expires .zeus.sock and launces zeus normally" do
-        expect(File).to receive(:delete).with(sockfile)
+      it "deletes expires .zeus.sock and launches zeus normally" do
         expect(subject).to receive(:spawn_zeus)
+        expect(File).to receive(:delete).with(sockfile)
         subject.launch_zeus('Start')
       end
     end
 
     context 'with active .zeus.sock' do
-      subject { Guard::Zeus::Runner.new }
-      let(:sockfile) { double('sockfile') }
-      let(:socket) { double('socket') }
-
       before do
+        allow(subject).to receive(:sockfile).and_return(sockfile)
         allow(File).to receive(:exist?).and_return(true)
         allow(UNIXSocket).to receive(:open).and_return(socket)
-        allow(subject).to receive(:sockfile).and_return(sockfile)
       end
 
-      it "continues without starting zues and removing .zeus.sock" do
-        expect(File).to_not receive(:delete).with(sockfile)
+      it "continues without starting zeus and removing .zeus.sock" do
         expect(subject).to_not receive(:spawn_zeus)
+        expect(File).to_not receive(:delete).with(sockfile)
         subject.launch_zeus('Start')
       end
     end
