@@ -13,13 +13,24 @@ module Guard
         UI.info "Guard::Zeus Initialized"
       end
 
-      def launch_zeus(action)
-        UI.info "#{action}ing Zeus", :reset => true
-        spawn_zeus zeus_serve_command, zeus_serve_options
-      end
-
       def kill_zeus
         stop_zeus
+      end
+
+      def launch_zeus(action)
+        UI.info "#{action}ing Zeus", :reset => true
+
+        # check for a current .zeus.sock
+        if File.exist? sockfile
+
+          # if it's active, use it
+          return if can_connect_to_socket?
+
+          # just delete it
+          delete_sockfile
+        end
+
+        spawn_zeus zeus_serve_command, zeus_serve_options
       end
 
       def run(paths)
@@ -37,12 +48,32 @@ module Guard
 
       private
 
-      def sockfile
-          File.join(Dir.pwd, ".zeus.sock")
+      def bundler?
+        @bundler ||= options[:bundler] != false && File.exist?("#{Dir.pwd}/Gemfile")
+      end
+
+      # Return a truthy socket, or catch the thrown exception
+      # and return false
+      def can_connect_to_socket?
+        UNIXSocket.open(sockfile)
+      rescue Errno::ECONNREFUSED
+        false
+      end
+
+      def delete_sockfile
+        File.delete(sockfile)
+      end
+
+      def rspec?
+        @rspec ||= options[:rspec] != false && File.exist?("#{Dir.pwd}/spec")
       end
 
       def run_command(cmd, options = '')
         system "#{cmd} #{options}"
+      end
+
+      def sockfile
+        File.join(Dir.pwd, ".zeus.sock")
       end
 
       def spawn_zeus(cmd, options = '')
@@ -62,8 +93,14 @@ module Guard
           end
         rescue Errno::ECHILD
         end
-        File.delete(sockfile) if File.exist? sockfile
+        
+        delete_sockfile if File.exist? sockfile
+
         UI.info "Zeus Stopped", :reset => true
+      end
+
+      def test_unit?
+        @test_unit ||= options[:test_unit] != false && File.exist?("#{Dir.pwd}/test/test_helper.rb")
       end
 
       def zeus_push_command(paths)
@@ -89,18 +126,6 @@ module Guard
         opt_parts = []
         opt_parts << options[:cli] unless options[:cli].nil?
         opt_parts.join(' ')
-      end
-
-      def bundler?
-        @bundler ||= options[:bundler] != false && File.exist?("#{Dir.pwd}/Gemfile")
-      end
-
-      def test_unit?
-        @test_unit ||= options[:test_unit] != false && File.exist?("#{Dir.pwd}/test/test_helper.rb")
-      end
-
-      def rspec?
-        @rspec ||= options[:rspec] != false && File.exist?("#{Dir.pwd}/spec")
       end
     end
   end
