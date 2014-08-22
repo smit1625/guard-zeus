@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["greenberg@entryway.net", "assarata@gmail.com", "qnm@fea.st"]
   gem.description   = %q{Guard::Zeus automatically manage zeus}
   gem.summary       = %q{Pushes watched files to Zeus}
-  gem.homepage      = "http://github.com/qnm/guard-zeus"
+  gem.homepage      = "https://github.com/guard/guard-zeus"
 
   gem.add_runtime_dependency 'guard', '~> 2.0'
   gem.add_runtime_dependency 'zeus', '~> 0'
