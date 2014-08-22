@@ -3,8 +3,8 @@ Guard::Zeus
 
 Guard::Zeus automatically starts and stops [Zeus](https://github.com/burke/zeus).
 
-[![Build Status](https://travis-ci.org/qnm/guard-zeus.png?branch=master)](https://travis-ci.org/qnm/guard-zeus)
-[![Code Climate](https://codeclimate.com/github/qnm/guard-zeus.png)](https://codeclimate.com/github/qnm/guard-zeus)
+[![Build Status](https://travis-ci.org/guard/guard-zeus.png?branch=master)](https://travis-ci.org/guard/guard-zeus)
+[![Code Climate](https://codeclimate.com/github/guard/guard-zeus.png)](https://codeclimate.com/github/guard/guard-zeus)
 
 Install
 -------
@@ -50,8 +50,8 @@ Available options:
 Development
 -----------
 
-* Source hosted at [GitHub](https://github.com/qnm/guard-zeus)
-* Report issues/Questions/Feature requests on [GitHub Issues](https://github.com/qnm/guard-zeus/issues)
+* Source hosted at [GitHub](https://github.com/guard/guard-zeus)
+* Report issues/Questions/Feature requests on [GitHub Issues](https://github.com/guard/guard-zeus/issues)
 
 Pull requests are very welcome! Make sure your patches are well tested. Please create a topic branch for every separate change
 you make.
