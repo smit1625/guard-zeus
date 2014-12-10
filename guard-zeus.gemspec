@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Pushes watched files to Zeus}
   gem.homepage      = "https://github.com/guard/guard-zeus"
 
-  gem.add_runtime_dependency 'guard', '~> 2.0'
+  gem.add_runtime_dependency 'guard', '~> 2.0', '<= 2.8.0'
   gem.add_runtime_dependency 'zeus', '~> 0'
 
   gem.add_development_dependency 'bundler', '~> 1.0'
