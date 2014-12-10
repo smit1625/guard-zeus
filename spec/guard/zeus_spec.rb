@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Guard::Zeus do
+RSpec.describe Guard::Zeus do
   before do
     allow(Guard::UI).to receive(:info)
   end

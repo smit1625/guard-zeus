@@ -1,7 +1,6 @@
-require 'spec_helper'
 require 'fileutils'
 
-describe Guard::Zeus::Runner do
+RSpec.describe Guard::Zeus::Runner do
   let(:runner) { Guard::Zeus::Runner.new }
 
   before do

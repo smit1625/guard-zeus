@@ -10,7 +10,7 @@ end
 
 group :test do
   gem 'rake'
-  gem 'rspec', '~> 3.0.0'
+  gem 'rspec', '~> 3.1'
 end
 
 if RbConfig::CONFIG['target_os'] =~ /darwin/i
