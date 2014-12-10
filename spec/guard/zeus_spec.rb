@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Guard::Zeus do
+  before do
+    allow(Guard::UI).to receive(:info)
+  end
 
   describe '#initialize' do
     it "instantiates Runner with given options" do

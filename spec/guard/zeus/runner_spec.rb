@@ -4,6 +4,10 @@ require 'fileutils'
 describe Guard::Zeus::Runner do
   let(:runner) { Guard::Zeus::Runner.new }
 
+  before do
+    allow(Guard::UI).to receive(:info)
+  end
+
   describe '#initialize' do
     subject { runner.options }
 
