@@ -3,10 +3,21 @@ guard 'bundler' do
   watch(%r{^.+\.gemspec$})
 end
 
-guard 'rspec' do
-  watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^lib/(.+)\.rb$})        { |m| "spec/#{m[1]}_spec.rb" }
-  watch('spec/spec_helper.rb')     { 'spec' }
+guard :rspec, cmd: "bundle exec rspec" do
+  require "ostruct"
+
+  rspec = OpenStruct.new
+  rspec.spec_dir = "spec"
+  rspec.spec = ->(m) { "#{rspec.spec_dir}/#{m}_spec.rb" }
+  rspec.spec_helper = "#{rspec.spec_dir}/spec_helper.rb"
+
+  # Ruby apps
+  ruby = OpenStruct.new
+  ruby.lib_files = %r{^(lib/.+)\.rb$}
+
+  watch(%r{^#{rspec.spec_dir}/.+_spec\.rb$})
+  watch(rspec.spec_helper)      { rspec.spec_dir }
+  watch(ruby.lib_files)     { |m| rspec.spec.(m[1]) }
 end
 
 guard :rubocop do
