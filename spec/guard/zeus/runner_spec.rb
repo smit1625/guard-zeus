@@ -214,7 +214,7 @@ RSpec.describe Guard::Zeus::Runner do
         expect(Dir).to receive(:[]).with('test/**/*_test.rb').once.and_return(%w{test/unit/foo_test.rb test/functional/bar_test.rb})
         expect(Dir).to receive(:[]).with('test/**/test_*.rb').once.and_return(['test/unit/test_baz.rb'])
       end
-      
+
       it "calls Runner.run with each test file" do
         allow(subject).to receive(:rspec?).and_return(false)
         allow(subject).to receive(:test_unit?).and_return(true)
