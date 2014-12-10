@@ -5,7 +5,7 @@ gemspec
 
 group :development do
   gem 'guard-bundler', '~> 2.0'
-  gem 'guard-rspec', '~> 4.3.1'
+  gem 'guard-rspec', '~> 4.3'
 end
 
 group :test do
