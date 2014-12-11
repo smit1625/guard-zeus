@@ -1,6 +1,8 @@
+require "guard/compat/test/helper"
+
 RSpec.describe Guard::Zeus do
   before do
-    allow(Guard::UI).to receive(:info)
+    allow(Guard::Compat::UI).to receive(:info)
   end
 
   describe '#initialize' do

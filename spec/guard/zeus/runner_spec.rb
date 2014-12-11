@@ -4,7 +4,7 @@ RSpec.describe Guard::Zeus::Runner do
   let(:runner) { Guard::Zeus::Runner.new }
 
   before do
-    allow(Guard::UI).to receive(:info)
+    allow(Guard::Compat::UI).to receive(:info)
   end
 
   describe '#initialize' do

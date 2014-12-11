@@ -10,7 +10,7 @@ module Guard
 
       def initialize(options = {})
         @options = {:run_all => true}.merge(options)
-        UI.info "Guard::Zeus Initialized"
+        Compat::UI.info "Guard::Zeus Initialized"
       end
 
       def kill_zeus
@@ -18,7 +18,7 @@ module Guard
       end
 
       def launch_zeus(action)
-        UI.info "#{action}ing Zeus", :reset => true
+        Compat::UI.info "#{action}ing Zeus", :reset => true
 
         # check for a current .zeus.sock
         if File.exist? sockfile
@@ -93,10 +93,10 @@ module Guard
           end
         rescue Errno::ECHILD
         end
-        
+
         delete_sockfile if File.exist? sockfile
 
-        UI.info "Zeus Stopped", :reset => true
+        Compat::UI.info "Zeus Stopped", :reset => true
       end
 
       def test_unit?
