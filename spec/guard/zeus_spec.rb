@@ -1,4 +1,4 @@
-require "guard/compat/test/helper"
+require 'guard/compat/test/helper'
 
 RSpec.describe Guard::Zeus do
   before do
@@ -6,9 +6,9 @@ RSpec.describe Guard::Zeus do
   end
 
   describe '#initialize' do
-    it "instantiates Runner with given options" do
-      expect(Guard::Zeus::Runner).to receive(:new).with(:bundler => false)
-      Guard::Zeus.new :bundler => false
+    it 'instantiates Runner with given options' do
+      expect(Guard::Zeus::Runner).to receive(:new).with(bundler: false)
+      Guard::Zeus.new bundler: false
     end
   end
 
@@ -29,19 +29,19 @@ RSpec.describe Guard::Zeus do
   end
 
   describe '.run_all' do
-    it "calls Runner.run_all" do
+    it 'calls Runner.run_all' do
       expect(subject.runner).to receive(:run_all)
       subject.run_all
     end
   end
 
   describe '.run_on_modifications' do
-    it "calls Runner.run with file name" do
+    it 'calls Runner.run with file name' do
       expect(subject.runner).to receive(:run).with('file_name.rb')
       subject.run_on_modifications('file_name.rb')
     end
 
-    it "calls Runner.run with paths" do
+    it 'calls Runner.run with paths' do
       expect(subject.runner).to receive(:run).with(['spec/controllers', 'spec/requests'])
       subject.run_on_modifications(['spec/controllers', 'spec/requests'])
     end
@@ -53,5 +53,4 @@ RSpec.describe Guard::Zeus do
       subject.stop
     end
   end
-
 end

@@ -11,12 +11,12 @@ RSpec.describe Guard::Zeus::Runner do
     subject { runner.options }
 
     context 'with default options' do
-      it { is_expected.to eq({:run_all => true}) }
+      it { is_expected.to eq(run_all: true) }
     end
 
     context 'with run_all => false' do
-      let(:runner) { Guard::Zeus::Runner.new :run_all => false }
-      it { is_expected.to eq({:run_all => false}) }
+      let(:runner) { Guard::Zeus::Runner.new run_all: false }
+      it { is_expected.to eq(run_all: false) }
     end
   end
 
@@ -30,7 +30,7 @@ RSpec.describe Guard::Zeus::Runner do
         allow(File).to receive(:exist?).and_return(false)
       end
 
-      it "launches zeus normally" do
+      it 'launches zeus normally' do
         expect(File).to_not receive(:delete).with(sockfile)
         expect(subject).to receive(:spawn_zeus)
         subject.launch_zeus('Start')
@@ -44,7 +44,7 @@ RSpec.describe Guard::Zeus::Runner do
         allow(UNIXSocket).to receive(:open).and_raise(Errno::ECONNREFUSED)
       end
 
-      it "deletes expires .zeus.sock and launches zeus normally" do
+      it 'deletes expires .zeus.sock and launches zeus normally' do
         expect(subject).to receive(:spawn_zeus)
         expect(File).to receive(:delete).with(sockfile)
         subject.launch_zeus('Start')
@@ -58,7 +58,7 @@ RSpec.describe Guard::Zeus::Runner do
         allow(UNIXSocket).to receive(:open).and_return(socket)
       end
 
-      it "continues without starting zeus and removing .zeus.sock" do
+      it 'continues without starting zeus and removing .zeus.sock' do
         expect(subject).to_not receive(:spawn_zeus)
         expect(File).to_not receive(:delete).with(sockfile)
         subject.launch_zeus('Start')
@@ -66,14 +66,14 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with cli option' do
-      subject { Guard::Zeus::Runner.new :cli => '--time' }
+      subject { Guard::Zeus::Runner.new cli: '--time' }
 
       before do
         allow(subject).to receive_messages(test_unit?: false, rspec?: true, bundler?: false)
       end
 
-      it "launches zeus start with cli options" do
-        expect(subject).to receive(:spawn_zeus).with("zeus start", "--time")
+      it 'launches zeus start with cli options' do
+        expect(subject).to receive(:spawn_zeus).with('zeus start', '--time')
         subject.launch_zeus('Start')
       end
     end
@@ -83,8 +83,8 @@ RSpec.describe Guard::Zeus::Runner do
         allow(subject).to receive_messages(test_unit?: true, rspec?: false, bundler?: false)
       end
 
-      it "launches zeus start for Test::Unit" do
-        expect(subject).to receive(:spawn_zeus).with("zeus start", "")
+      it 'launches zeus start for Test::Unit' do
+        expect(subject).to receive(:spawn_zeus).with('zeus start', '')
         subject.launch_zeus('Start')
       end
     end
@@ -95,7 +95,7 @@ RSpec.describe Guard::Zeus::Runner do
       end
 
       it "launches zeus start for Test::Unit with 'bundle exec'" do
-        expect(subject).to receive(:spawn_zeus).with("bundle exec zeus start", "")
+        expect(subject).to receive(:spawn_zeus).with('bundle exec zeus start', '')
         subject.launch_zeus('Start')
       end
     end
@@ -105,8 +105,8 @@ RSpec.describe Guard::Zeus::Runner do
         allow(subject).to receive_messages(test_unit?: false, rspec?: true, bundler?: false)
       end
 
-      it "launches zeus start for RSpec" do
-        expect(subject).to receive(:spawn_zeus).with("zeus start", "")
+      it 'launches zeus start for RSpec' do
+        expect(subject).to receive(:spawn_zeus).with('zeus start', '')
         subject.launch_zeus('Start')
       end
     end
@@ -117,7 +117,7 @@ RSpec.describe Guard::Zeus::Runner do
       end
 
       it "launches zeus start for RSpec with 'bundle exec'" do
-        expect(subject).to receive(:spawn_zeus).with("bundle exec zeus start", "")
+        expect(subject).to receive(:spawn_zeus).with('bundle exec zeus start', '')
         subject.launch_zeus('Start')
       end
     end
@@ -159,7 +159,7 @@ RSpec.describe Guard::Zeus::Runner do
       subject.kill_zeus
     end
 
-    it "deletes the zeus socket file while stopping" do
+    it 'deletes the zeus socket file while stopping' do
       socket_file = subject.send(:sockfile)
       FileUtils.touch(socket_file)
       expect(subject).to receive(:fork).and_return(123)
@@ -172,7 +172,6 @@ RSpec.describe Guard::Zeus::Runner do
       subject.kill_zeus
       expect(File.exist?(socket_file)).not_to be_truthy
     end
-
   end
 
   describe '.run' do
@@ -211,14 +210,14 @@ RSpec.describe Guard::Zeus::Runner do
 
     context 'with test_unit' do
       before do
-        expect(Dir).to receive(:[]).with('test/**/*_test.rb').once.and_return(%w{test/unit/foo_test.rb test/functional/bar_test.rb})
+        expect(Dir).to receive(:[]).with('test/**/*_test.rb').once.and_return(%w(test/unit/foo_test.rb test/functional/bar_test.rb))
         expect(Dir).to receive(:[]).with('test/**/test_*.rb').once.and_return(['test/unit/test_baz.rb'])
       end
 
-      it "calls Runner.run with each test file" do
+      it 'calls Runner.run with each test file' do
         allow(subject).to receive(:rspec?).and_return(false)
         allow(subject).to receive(:test_unit?).and_return(true)
-        expect(subject).to receive(:run).with(%w{test/unit/foo_test.rb test/functional/bar_test.rb test/unit/test_baz.rb})
+        expect(subject).to receive(:run).with(%w(test/unit/foo_test.rb test/functional/bar_test.rb test/unit/test_baz.rb))
         subject.run_all
       end
     end
@@ -233,7 +232,7 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with :run_all set to false' do
-      let(:runner) { Guard::Zeus::Runner.new :run_all => false }
+      let(:runner) { Guard::Zeus::Runner.new run_all: false }
       it 'not run all specs' do
         allow(runner).to receive(:rspec?).and_return(true)
         expect(runner).not_to receive(:run)
@@ -244,7 +243,7 @@ RSpec.describe Guard::Zeus::Runner do
 
   describe '.bundler?' do
     before do
-      allow(Dir).to receive(:pwd).and_return("")
+      allow(Dir).to receive(:pwd).and_return('')
     end
 
     context 'with no bundler option' do
@@ -272,7 +271,7 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with :bundler => false' do
-      subject { Guard::Zeus::Runner.new :bundler => false }
+      subject { Guard::Zeus::Runner.new bundler: false }
 
       context 'with Gemfile' do
         before do
@@ -296,7 +295,7 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with :bundler => true' do
-      subject { Guard::Zeus::Runner.new :bundler => true }
+      subject { Guard::Zeus::Runner.new bundler: true }
 
       context 'with Gemfile' do
         before do
@@ -322,7 +321,7 @@ RSpec.describe Guard::Zeus::Runner do
 
   describe '.test_unit?' do
     before do
-      allow(Dir).to receive(:pwd).and_return("")
+      allow(Dir).to receive(:pwd).and_return('')
     end
 
     context 'with no test_unit option' do
@@ -350,7 +349,7 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with :test_unit => false' do
-      subject { Guard::Zeus::Runner.new :test_unit => false }
+      subject { Guard::Zeus::Runner.new test_unit: false }
 
       context 'with Gemfile' do
         before do
@@ -374,7 +373,7 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with :test_unit => true' do
-      subject { Guard::Zeus::Runner.new :test_unit => true }
+      subject { Guard::Zeus::Runner.new test_unit: true }
 
       context 'with Gemfile' do
         before do
@@ -400,7 +399,7 @@ RSpec.describe Guard::Zeus::Runner do
 
   describe '.rspec?' do
     before do
-      allow(Dir).to receive(:pwd).and_return("")
+      allow(Dir).to receive(:pwd).and_return('')
     end
 
     context 'with no rspec option' do
@@ -428,7 +427,7 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with :rspec => false' do
-      subject { Guard::Zeus::Runner.new :rspec => false }
+      subject { Guard::Zeus::Runner.new rspec: false }
 
       context 'with Gemfile' do
         before do
@@ -452,7 +451,7 @@ RSpec.describe Guard::Zeus::Runner do
     end
 
     context 'with :rspec => true' do
-      subject { Guard::Zeus::Runner.new :rspec => true }
+      subject { Guard::Zeus::Runner.new rspec: true }
 
       context 'with Gemfile' do
         before do
@@ -475,5 +474,4 @@ RSpec.describe Guard::Zeus::Runner do
       end
     end
   end
-
 end

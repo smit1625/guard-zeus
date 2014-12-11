@@ -1,8 +1,8 @@
 guard 'zeus' do
-  require "ostruct"
+  require 'ostruct'
 
   rspec = OpenStruct.new
-  rspec.spec_dir = "spec"
+  rspec.spec_dir = 'spec'
   rspec.spec = ->(m) { "#{rspec.spec_dir}/#{m}_spec.rb" }
   rspec.spec_helper = "#{rspec.spec_dir}/spec_helper.rb"
 
