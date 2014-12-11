@@ -9,6 +9,7 @@ module Guard
       attr_reader :options
 
       def initialize(options = {})
+        @zeus_pid = nil
         @options = { run_all: true }.merge(options)
         Compat::UI.info 'Guard::Zeus Initialized'
       end
