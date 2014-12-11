@@ -3,8 +3,10 @@ require 'socket'
 require 'tempfile'
 require 'digest/md5'
 
+require 'guard/compat/plugin'
+
 module Guard
-  class Zeus
+  class Zeus < Plugin
     class Runner
       attr_reader :options
 

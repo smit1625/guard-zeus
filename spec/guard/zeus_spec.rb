@@ -1,5 +1,6 @@
 require 'guard/compat/test/helper'
 
+require 'guard/zeus'
 RSpec.describe Guard::Zeus do
   before do
     allow(Guard::Compat::UI).to receive(:info)

@@ -1,5 +1,7 @@
 require 'guard/compat/test/template'
 
+require 'guard/zeus'
+
 RSpec.describe Guard::Zeus do
   describe 'template' do
     subject { Guard::Compat::Test::Template.new(described_class) }

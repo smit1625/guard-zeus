@@ -1,5 +1,7 @@
 require 'fileutils'
 
+require 'guard/zeus/runner'
+
 RSpec.describe Guard::Zeus::Runner do
   let(:runner) { Guard::Zeus::Runner.new }
 
