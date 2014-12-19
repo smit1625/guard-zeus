@@ -13,10 +13,10 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/guard/guard-zeus"
 
   gem.add_runtime_dependency 'guard', '~> 2.0'
+  gem.add_runtime_dependency 'guard-compat', '~> 1.1'
   gem.add_runtime_dependency 'zeus', '~> 0'
 
   gem.add_development_dependency 'bundler', '~> 1.0'
-  gem.add_development_dependency 'rspec', '~> 3.0.0'
 
   gem.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md]
   gem.require_path  = 'lib'

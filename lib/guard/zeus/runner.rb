@@ -3,14 +3,17 @@ require 'socket'
 require 'tempfile'
 require 'digest/md5'
 
+require 'guard/compat/plugin'
+
 module Guard
-  class Zeus
+  class Zeus < Plugin
     class Runner
       attr_reader :options
 
       def initialize(options = {})
-        @options = {:run_all => true}.merge(options)
-        UI.info "Guard::Zeus Initialized"
+        @zeus_pid = nil
+        @options = { run_all: true }.merge(options)
+        Compat::UI.info 'Guard::Zeus Initialized'
       end
 
       def kill_zeus
@@ -18,7 +21,7 @@ module Guard
       end
 
       def launch_zeus(action)
-        UI.info "#{action}ing Zeus", :reset => true
+        Compat::UI.info "#{action}ing Zeus", reset: true
 
         # check for a current .zeus.sock
         if File.exist? sockfile
@@ -42,7 +45,7 @@ module Guard
         if rspec?
           run(['rspec'])
         elsif test_unit?
-          run(Dir['test/**/*_test.rb']+Dir['test/**/test_*.rb'])
+          run(Dir['test/**/*_test.rb'] + Dir['test/**/test_*.rb'])
         end
       end
 
@@ -73,7 +76,7 @@ module Guard
       end
 
       def sockfile
-        File.join(Dir.pwd, ".zeus.sock")
+        File.join(Dir.pwd, '.zeus.sock')
       end
 
       def spawn_zeus(cmd, options = '')
@@ -93,10 +96,10 @@ module Guard
           end
         rescue Errno::ECHILD
         end
-        
+
         delete_sockfile if File.exist? sockfile
 
-        UI.info "Zeus Stopped", :reset => true
+        Compat::UI.info 'Zeus Stopped', reset: true
       end
 
       def test_unit?
@@ -105,8 +108,8 @@ module Guard
 
       def zeus_push_command(paths)
         cmd_parts = []
-        cmd_parts << "bundle exec" if bundler?
-        cmd_parts << "zeus test"
+        cmd_parts << 'bundle exec' if bundler?
+        cmd_parts << 'zeus test'
         cmd_parts << paths.join(' ')
         cmd_parts.join(' ')
       end
@@ -117,8 +120,8 @@ module Guard
 
       def zeus_serve_command
         cmd_parts = []
-        cmd_parts << "bundle exec" if bundler?
-        cmd_parts << "zeus start"
+        cmd_parts << 'bundle exec' if bundler?
+        cmd_parts << 'zeus start'
         cmd_parts.join(' ')
       end
 

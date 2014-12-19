@@ -1,25 +1,23 @@
-require 'guard'
-require 'guard/plugin'
+require 'guard/compat/plugin'
 
 module Guard
   class Zeus < Plugin
-
     autoload :Runner, 'guard/zeus/runner'
     attr_accessor :runner
 
-    def initialize(options={})
+    def initialize(options = {})
       super
       @runner = Runner.new(options)
     end
 
     def start
       runner.kill_zeus
-      runner.launch_zeus("Start")
+      runner.launch_zeus('Start')
     end
 
     def reload
       runner.kill_zeus
-      runner.launch_zeus("Reload")
+      runner.launch_zeus('Reload')
     end
 
     def run_all
@@ -33,6 +31,5 @@ module Guard
     def stop
       runner.kill_zeus
     end
-
   end
 end

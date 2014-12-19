@@ -1,12 +1,38 @@
 guard 'zeus' do
-  # uses the .rspec file
-  # --colour --fail-fast --format documentation --tag ~slow
-  watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
-  watch(%r{^app/(.+)\.haml$})                         { |m| "spec/#{m[1]}.haml_spec.rb" }
-  watch(%r{^lib/(.+)\.rb$})                           { |m| "spec/lib/#{m[1]}_spec.rb" }
-  watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { |m| ["spec/routing/#{m[1]}_routing_spec.rb", "spec/#{m[2]}s/#{m[1]}_#{m[2]}_spec.rb", "spec/requests/#{m[1]}_spec.rb"] }
-  
+  require 'ostruct'
+
+  rspec = OpenStruct.new
+  rspec.spec_dir = 'spec'
+  rspec.spec = ->(m) { "#{rspec.spec_dir}/#{m}_spec.rb" }
+  rspec.spec_helper = "#{rspec.spec_dir}/spec_helper.rb"
+
+  # matchers
+  rspec.spec_files = /^#{rspec.spec_dir}\/.+_spec\.rb$/
+
+  # Ruby apps
+  ruby = OpenStruct.new
+  ruby.lib_files = /^(lib\/.+)\.rb$/
+
+  watch(rspec.spec_files)
+  watch(rspec.spec_helper) { rspec.spec_dir }
+  watch(ruby.lib_files) { |m| rspec.spec.call(m[1]) }
+
+  # Rails example
+  rails = OpenStruct.new
+  rails.app_files = /^app\/(.+)\.rb$/
+  rails.views_n_layouts = /^app\/(.+(?:\.erb|\.haml|\.slim))$/
+  rails.controllers = %r{^app/controllers/(.+)_controller\.rb$}
+
+  watch(rails.app_files) { |m| rspec.spec.call(m[1]) }
+  watch(rails.views_n_layouts) { |m| rspec.spec.call(m[1]) }
+  watch(rails.controllers) do |m|
+    [
+      rspec.spec.call("routing/#{m[1]}_routing"),
+      rspec.spec.call("controllers/#{m[1]}_controller"),
+      rspec.spec.call("acceptance/#{m[1]}")
+    ]
+  end
+
   # TestUnit
   # watch(%r|^test/(.*)_test\.rb$|)
   # watch(%r|^lib/(.*)([^/]+)\.rb$|)     { |m| "test/#{m[1]}test_#{m[2]}.rb" }
