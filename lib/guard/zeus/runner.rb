@@ -25,9 +25,13 @@ module Guard
 
         # check for a current .zeus.sock
         if File.exist? sockfile
+          Compat::UI.info 'Guard::Zeus found an existing .zeus.sock'
 
           # if it's active, use it
-          return if can_connect_to_socket?
+          if can_connect_to_socket?
+            Compat::UI.info 'Guard::Zeus is re-using an existing .zeus.sock'
+            return
+          end
 
           # just delete it
           delete_sockfile
@@ -64,6 +68,7 @@ module Guard
       end
 
       def delete_sockfile
+        Compat::UI.info 'Guard::Zeus is deleting an unusable .zeus.sock'
         File.delete(sockfile)
       end
 
