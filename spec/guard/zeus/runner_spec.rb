@@ -202,10 +202,10 @@ RSpec.describe Guard::Zeus::Runner do
 
   describe '.run_all' do
     context 'with rspec' do
-      it "calls Runner.run with 'spec'" do
+      it "calls Runner.run with 'spec' directory" do
         allow(subject).to receive(:rspec?).and_return(true)
         allow(subject).to receive(:test_unit?).and_return(false)
-        expect(subject).to receive(:run).with(['rspec'])
+        expect(subject).to receive(:run).with(['spec'])
         subject.run_all
       end
     end

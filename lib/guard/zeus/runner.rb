@@ -47,7 +47,7 @@ module Guard
       def run_all
         return unless options[:run_all]
         if rspec?
-          run(['rspec'])
+          run(['spec'])
         elsif test_unit?
           run(Dir['test/**/*_test.rb'] + Dir['test/**/test_*.rb'])
         end
