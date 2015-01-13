@@ -35,6 +35,17 @@ Guardfile
 
 Please read [Guard doc](https://github.com/guard/guard#readme) for more information about the Guardfile DSL.
 
+Known Issues
+------------
+
+There is a known issue when using guard-zues with pry, notably the zeus output appear on top of the pry console.
+
+The workaround is to add the `cli` setting in your `Guardfile`, e.g.
+
+```
+guard 'zeus', cli: '> /dev/null' do
+```
+
 ### Options
 
 Available options:
