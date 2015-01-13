@@ -1,7 +1,10 @@
-## xxxx - August 19, 2014
+## 2.0.1 - January 13, 2015
 ### New features
+ - [#11](https://github.com/guard/guard-zeus/issues/11) Better handling for .zeus.sock: Remove if expired and connect if active ([@qnm](https://github.com/qnm))
 
- - Better handling for .zeus.sock: Remove if expired and connect if active ([@qnm](https://github.com/qnm))
+### Bug Fixes
+ - [#16](https://github.com/guard/guard-zeus/issues/16) Fix rspec error by invoking rspec with spec directory([@e2](https://github.com/e2))
+ - Various fixes including testing against rspec 3.1 and rubocup fixes ([@e2](https://github.com/e2))
 
 ## 0.3.0 - June 29, 2012
 
