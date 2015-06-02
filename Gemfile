@@ -19,5 +19,5 @@ if RbConfig::CONFIG['target_os'] =~ /darwin/i
   gem 'growl', require: false
 end
 if RbConfig::CONFIG['target_os'] =~ /linux/i
-  gem 'libnotify', '~> 0.8.3', require: false
+  gem 'libnotify', '~> 0.9.1', require: false
 end
