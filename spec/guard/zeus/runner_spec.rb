@@ -7,6 +7,8 @@ RSpec.describe Guard::Zeus::Runner do
 
   before do
     allow(Guard::Compat::UI).to receive(:info)
+    allow(Guard::Compat::UI).to receive(:debug)
+    allow(UNIXSocket).to receive(:open)
   end
 
   describe '#initialize' do
