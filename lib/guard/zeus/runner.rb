@@ -167,6 +167,7 @@ module Guard
       end
 
       def search_zeus_logfile(pattern)
+        return [] unless File.exist? zeus_logfile
         `awk '#{pattern.to_s}{print $0}' #{zeus_logfile} | awk '{print $4}' | cut -d '/' -f 1`.strip.lines
       end
 
