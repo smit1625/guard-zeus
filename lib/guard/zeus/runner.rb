@@ -12,7 +12,7 @@ module Guard
 
       def initialize(options = {})
         @zeus_pid = nil
-        @options = { run_all: true }.merge(options)
+        @options = { run_all: true, logfile: nil }.merge(options)
         Compat::UI.info 'Guard::Zeus Initialized'
       end
 
@@ -143,7 +143,14 @@ module Guard
       def zeus_serve_options
         opt_parts = []
         opt_parts << options[:cli] unless options[:cli].nil?
+        unless opt_parts.any? {|part| part =~ />/ }
+          opt_parts << " > #{zeus_logfile} 2>&1"
+        end
         opt_parts.join(' ')
+      end
+
+      def zeus_logfile
+        @zeus_logfile ||= options[:logfile] || File.join(Dir.pwd, 'logs', 'zeus_output.log')
       end
     end
   end
