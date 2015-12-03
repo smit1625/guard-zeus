@@ -8,17 +8,23 @@ require 'guard/compat/plugin'
 module Guard
   class Zeus < Plugin
     class Runner
-      MAX_WAIT_COUNT = 10
+      MAX_WAIT_COUNT  = 10
+      DEFAULT_OPTIONS = {
+        run_all: true,
+        exit_last: true,
+        logfile: nil,
+        timeout: 30
+      }
       attr_reader :options
 
       def initialize(options = {})
         @zeus_pid = nil
-        @options = { run_all: true, logfile: nil, timeout: 30 }.merge(options)
+        @options = DEFAULT_OPTIONS.merge(options)
         Compat::UI.info 'Guard::Zeus Initialized'
       end
 
-      def kill_zeus
-        stop_zeus
+      def kill_zeus(force=false)
+        stop_zeus(force)
       end
 
       def launch_zeus(action)
@@ -103,9 +109,18 @@ module Guard
         Compat::UI.debug "Zeus has PID #{@zeus_pid}"
       end
 
-      def stop_zeus
+      def stop_zeus(force=false)
         Compat::UI.debug 'Stopping Zeus'
         return unless @zeus_pid
+
+        if !force && options[:exit_last]
+          return if @stop_scheduled
+          Compat::UI.debug 'Scheduling Zeus to be stopped last'
+          at_exit { stop_zeus(true) }
+          @stop_scheduled = true
+          return
+        end
+
         Compat::UI.debug 'Stopping Zeus using a PID'
 
         Compat::UI.debug "Killing process #{@zeus_pid}"

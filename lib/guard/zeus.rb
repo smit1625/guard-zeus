@@ -11,12 +11,12 @@ module Guard
     end
 
     def start
-      runner.kill_zeus
+      runner.kill_zeus(true)
       runner.launch_zeus('Start')
     end
 
     def reload
-      runner.kill_zeus
+      runner.kill_zeus(true)
       runner.launch_zeus('Reload')
     end
 
