@@ -150,7 +150,7 @@ module Guard
       end
 
       def zeus_logfile
-        @zeus_logfile ||= options[:logfile] || File.join(Dir.pwd, 'logs', 'zeus_output.log')
+        @zeus_logfile ||= options[:logfile] || File.join(Dir.pwd, 'log', 'zeus_output.log')
       end
     end
   end
