@@ -78,7 +78,7 @@ module Guard
         File.delete(sockfile)
       end
 
-      def delete_sockfile
+      def delete_logfile
         Compat::UI.info 'Guard::Zeus is deleting an existing logfile'
         File.delete(zeus_logfile)
       end
