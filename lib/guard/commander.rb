@@ -9,8 +9,14 @@ require "guard/internals/state"
 
 module Guard
   module Commander
-    # def start(options={})
-    #
-    # end
+    def self.included(base)
+      base.class_eval do
+        alias_method :original_start, :start
+        def start(options={})
+          puts 'CUSTOM COMMANDER STARTING UP!'
+          original_start
+        end
+      end
+    end
   end
 end
