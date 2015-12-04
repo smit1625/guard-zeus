@@ -114,8 +114,11 @@ module Guard
         return unless @zeus_pid
 
         if !force && options[:exit_last]
-          return if @stop_scheduled
-          Compat::UI.info 'Scheduling Zeus to be stopped last'
+          if @stop_scheduled
+            Compat::UI.debug 'Zeus already scheduled for stop!'
+            return
+          end
+          Compat::UI.debug 'Scheduling Zeus to be stopped last'
           fork {
             wait_for_all_guards_to_stop
             Compat::UI.debug 'Guard::Zeus proceeding to stop Zeus'
