@@ -14,6 +14,7 @@ require "guard/interactor"
 
 module Guard
   # module Commander
+  class << self
     def self.included(base)
       puts 'Test 1'
       base.class_eval do
@@ -25,6 +26,7 @@ module Guard
         end
       end
     end
+  end
   # end
   # extend Commander
 end
