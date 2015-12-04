@@ -12,7 +12,8 @@ module Guard
       DEFAULT_OPTIONS = {
         run_all: true,
         exit_last: true,
-        logfile: nil,
+        log_file: nil,
+        pid_file: nil,
         timeout: 30
       }
       attr_reader :options
@@ -37,6 +38,7 @@ module Guard
           # if it's active, use it
           if can_connect_to_socket?
             @reusing_socket = true
+            @zeus_pid = read_pidfile
             Compat::UI.info 'Guard::Zeus is re-using an existing .zeus.sock'
             return
           end
@@ -46,7 +48,9 @@ module Guard
         end
  
         # check for an existing logfile
-        delete_logfile if !@reusing_socket && File.exist?(zeus_logfile)
+        if !@reusing_socket && File.exist?(zeus_logfile)
+          delete_logfile 
+        end
 
         spawn_zeus zeus_serve_command, zeus_serve_options
         wait_for_zeus_to_be_ready
@@ -89,6 +93,11 @@ module Guard
         File.delete(zeus_logfile)
       end
 
+      def delete_pidfile
+        Compat::UI.info 'Guard::Zeus is deleting an existing pidfile'
+        File.delete(zeus_pidfile)
+      end
+
       def rspec?
         @rspec ||= options[:rspec] != false && File.exist?("#{Dir.pwd}/spec")
       end
@@ -103,9 +112,8 @@ module Guard
 
       def spawn_zeus(cmd, options = '')
         Compat::UI.debug "About to spawn zeus"
-        @zeus_pid = fork do
-          exec "#{cmd} #{options}"
-        end
+        @zeus_pid = fork { exec "#{cmd} #{options}" }
+        File.open(pid_file, 'w') { |f| f.write(@zeus_pid) }
         Compat::UI.debug "Zeus has PID #{@zeus_pid}"
       end
 
@@ -144,6 +152,8 @@ module Guard
           Compat::UI.debug "ECHILD path"
         end
 
+        delete_pidfile if File.exist? pid_file
+        delete_logfile if File.exist? zeus_logfile
         delete_sockfile if File.exist? sockfile
 
         Compat::UI.info 'Zeus Stopped', reset: true
@@ -184,7 +194,7 @@ module Guard
       end
 
       def zeus_logfile
-        @zeus_logfile ||= options[:logfile] || File.join(Dir.pwd, 'log', 'zeus_output.log')
+        @zeus_logfile ||= options[:log_file] || File.join(Dir.pwd, 'log', 'zeus_output.log')
       end
 
       def search_zeus_logfile(pattern)
@@ -232,6 +242,12 @@ module Guard
           plugin_options ||= p.runner.options if p.respond_to?(:runner) && p.runner.respond_to?(:options)
           plugin_options[:zeus] && p.watchers.any?
         end
+      end
+
+      def read_pid; Integer(File.read(pid_file)); rescue ArgumentError; nil end
+      def pid_file
+        @pid_file ||= File.expand_path( options[:pid_file] || File.join(
+          Dir.pwd, 'tmp', 'pids', 'zeus_wrapper.pid' ) )
       end
 
     end

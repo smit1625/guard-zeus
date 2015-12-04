@@ -29,8 +29,6 @@ module Guard
     end
 
     def stop
-      Compat::UI.info "Guard::Zeus --> Other guards: #{Guard.state.session.plugins.all.inspect}"
-      Compat::UI.info "Guard::Zeus --> State: #{Guard.state.inspect}"
       runner.kill_zeus
     end
   end
