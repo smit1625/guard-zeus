@@ -95,7 +95,7 @@ module Guard
 
       def delete_pidfile
         Compat::UI.info 'Guard::Zeus is deleting an existing pidfile'
-        File.delete(zeus_pidfile)
+        File.delete(pid_file)
       end
 
       def rspec?
