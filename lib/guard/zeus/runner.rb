@@ -118,7 +118,7 @@ module Guard
           Compat::UI.info 'Scheduling Zeus to be stopped last'
           fork {
             wait_for_all_guards_to_stop
-            Compat::UI.info 'Guard::Zeus proceeding to stop Zeus'
+            Compat::UI.debug 'Guard::Zeus proceeding to stop Zeus'
             stop_zeus(true) }
           @stop_scheduled = true
           return
