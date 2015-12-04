@@ -19,4 +19,5 @@ module Guard
       end
     end
   end
+  extend Commander
 end
