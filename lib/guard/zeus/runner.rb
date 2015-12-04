@@ -116,7 +116,9 @@ module Guard
         if !force && options[:exit_last]
           return if @stop_scheduled
           Compat::UI.debug 'Scheduling Zeus to be stopped last'
-          at_exit { stop_zeus(true) }
+          fork {
+            wait_for_all_guards_to_stop
+            stop_zeus(true) }
           @stop_scheduled = true
           return
         end
@@ -217,6 +219,9 @@ module Guard
       end
       def wait_for_action; sleep sleep_time end
       def wait_for_zeus_to_be_ready; wait_for_loop { zeus_ready? } end
+      def wait_for_all_guards_to_stop
+        # wait_for_loop {  }
+      end
 
     end
   end
