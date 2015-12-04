@@ -220,7 +220,14 @@ module Guard
       def wait_for_action; sleep sleep_time end
       def wait_for_zeus_to_be_ready; wait_for_loop { zeus_ready? } end
       def wait_for_all_guards_to_stop
-        # wait_for_loop {  }
+        wait_for_loop { running_zeus_guards.empty? }
+      end
+      def running_zeus_guards
+        Guard.state.session.plugins.select do |p|
+          plugin_options = p.options if p.respond_to?(:options) && p.options.any?
+          plugin_options ||= p.runner.options if p.respond_to?(:runner) && p.runner.respond_to?(:options)
+          plugin_options[:zeus] && p.watchers.any?
+        end
       end
 
     end

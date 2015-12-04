@@ -29,8 +29,15 @@ module Guard
     end
 
     def stop
-      Compat::UI.info "Guard::Zeus --> Other guards: #{Guard.guards.inspect}"
+      Compat::UI.info "Guard::Zeus --> Other guards: #{Guard.plugins.inspect}"
       Compat::UI.info "Guard::Zeus --> State: #{Guard.state.inspect}"
+      running_zeus_plugins = Guard.state.session.plugins.select do |p|
+        plugin_options = p.options if p.respond_to?(:options) && p.options.any?
+        plugin_options ||= p.runner.options if p.respond_to?(:runner) && p.runner.respond_to?(:options)
+        plugin_options[:zeus]
+      end
+      if running_zeus_plugins.any?
+      end
       runner.kill_zeus
     end
   end
