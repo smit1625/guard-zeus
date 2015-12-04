@@ -1,4 +1,16 @@
-require 'guard'
+require "thread"
+require "listen"
+
+require "guard/config"
+require "guard/deprecated/guard" unless Guard::Config.new.strict?
+require "guard/internals/helpers"
+
+require "guard/internals/debugging"
+require "guard/internals/traps"
+require "guard/internals/queue"
+
+# TODO: remove this class altogether
+require "guard/interactor"
 
 module Guard
   # module Commander
