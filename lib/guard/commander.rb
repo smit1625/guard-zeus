@@ -7,9 +7,9 @@ require "guard/dsl_describer"
 
 require "guard/internals/state"
 
-OriginalGuardCommander = Guard::Commander
 
 module Guard
+  OriginalGuardCommander = Commander
   module Commander
     extend OriginalGuardCommander
     def start(options={})
