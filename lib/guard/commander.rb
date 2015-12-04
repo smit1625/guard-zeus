@@ -9,10 +9,8 @@ require "guard/internals/state"
 
 module Guard
   module Commander
-    def start(options={})
-      puts "CUSTOM COMMANDER STARTING UP!"
-      super
-    end
+    # def start(options={})
+    #
+    # end
   end
-  extend Commander
 end
