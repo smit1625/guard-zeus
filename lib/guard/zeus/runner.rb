@@ -197,9 +197,9 @@ module Guard
         @zeus_logfile ||= options[:log_file] || File.join(Dir.pwd, 'log', 'zeus_output.log')
       end
 
-      def search_zeus_logfile(pattern)
+      def search_zeus_logfile(pattern_str)
         return [] unless File.exist? zeus_logfile
-        cmd = "awk '#{pattern.to_s}{print $0}' #{zeus_logfile}"
+        cmd = "awk '/#{pattern_str}/{print $0}' #{zeus_logfile}"
         cmd << " | awk '{print $4}' | cut -d '/' -f 1"
         Compat::UI.debug "Zeus log search command: #{cmd}"
         `#{cmd}`.strip.lines
@@ -207,12 +207,12 @@ module Guard
 
       def zeus_processes
         return @zeus_processes if @zeus_processes
-        unbooted_processes = search_zeus_logfile(/unbooted/)
+        unbooted_processes = search_zeus_logfile('unbooted')
         return [] if unbooted_processes.empty?
         @zeus_processes = unbooted_processes
       end
       def zeus_ready_processes
-        search_zeus_logfile(/SReady/)
+        search_zeus_logfile('SReady')
       end
 
       def zeus_booted?
