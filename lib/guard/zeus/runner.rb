@@ -2,9 +2,9 @@
 require 'socket'
 require 'tempfile'
 require 'digest/md5'
+require 'json'
 
 require 'guard/compat/plugin'
-require 'byebug' # TODO: remove that
 
 module Guard
   class Zeus < Plugin
@@ -212,15 +212,21 @@ module Guard
         cmd = "awk '/#{pattern_str}/{print $0}' #{zeus_logfile}"
         cmd << " | awk '{print $4}' | cut -d '/' -f 1"
         # Compat::UI.debug "Zeus log search command: #{cmd}"
-        `#{cmd}`.strip.lines
+        `#{cmd}`.lines.map(&:strip).delete_if(&:empty?)
       end
 
+      def collect_zeus_processes_from_plan_hash(plan_hash)
+        processes = []
+        plan_hash.each do |k, v|
+          if v.is_a?(Hash)
+            processes << k
+            processes.concat collect_zeus_processes_from_plan_hash(v)
+          end
+        end
+        processes
+      end
       def zeus_processes
-        search_zeus_logfile('unbooted')
-        # return @zeus_processes if @zeus_processes
-        # unbooted_processes = search_zeus_logfile('unbooted')
-        # return [] if unbooted_processes.empty?
-        # @zeus_processes = unbooted_processes
+        @zeus_processes ||= collect_zeus_processes_from_plan_hash(zeus_plan)
       end
       def zeus_ready_processes
         search_zeus_logfile('SReady')
@@ -269,6 +275,20 @@ module Guard
         @pid_file ||= File.expand_path( options[:pid_file] || File.join(
           Dir.pwd, 'tmp', 'pids', 'zeus_wrapper.pid' ) )
       end
+
+      def zeus_json_path
+        return @zeus_json_path if @zeus_json_path
+        app_json_path = File.join Dir.pwd, 'zeus.json'
+        return @zeus_json_path = app_json_path if File.exist? app_json_path
+        zeus_path = `which zeus`.strip
+        gems_dir = File.join zeus_path, '..', '..', 'gems'
+        zeus_gem_dir = File.join gems_dir, "zeus-#{Zeus::VERSION}"
+        default_json_path = File.join zeus_gem_dir, 'examples', 'zeus.json'
+        return unless File.exist? default_json_path
+        @zeus_json_path = default_json_path
+      end
+      def zeus_json; @zeus_json ||= JSON.parse File.read(zeus_json_path) end
+      def zeus_plan; zeus_json['plan'] end
 
     end
   end
