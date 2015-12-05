@@ -57,7 +57,8 @@ module Guard
         if ( boot_success = wait_for_zeus_to_be_ready )
           Compat::UI.debug 'Guard::Zeus booted successfully.'
         else
-          Compat::UI.warning 'Timed out waiting for Guard::Zeus to boot.'
+          remaining_processes = zeus_processes - zeus_ready_processes
+          Compat::UI.warning "Timed out waiting for Guard::Zeus to boot (#{remaining_processes.inspect})."
         end
         boot_success
       end
