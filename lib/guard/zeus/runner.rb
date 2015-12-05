@@ -134,12 +134,11 @@ module Guard
             return
           end
           Compat::UI.debug 'Scheduling Zeus to be stopped last'
-          # Compat::UI.debug "All Zeus guards: #{zeus_guards.inspect}"
-          # Compat::UI.debug "Running Zeus guards: #{running_zeus_guards.inspect}"
           fork {
             # zeus_guards.each{|g| g.stop }
             wait_for_all_guards_to_stop
             Compat::UI.debug 'Guard::Zeus proceeding to stop Zeus'
+            sleep 1
             stop_zeus(true) }
           @stop_scheduled = true
           return
