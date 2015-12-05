@@ -136,7 +136,7 @@ module Guard
           # Compat::UI.debug "All Zeus guards: #{zeus_guards.inspect}"
           # Compat::UI.debug "Running Zeus guards: #{running_zeus_guards.inspect}"
           fork {
-            zeus_guards.each{|g| g.stop }
+            # zeus_guards.each{|g| g.stop }
             wait_for_all_guards_to_stop
             Compat::UI.debug 'Guard::Zeus proceeding to stop Zeus'
             stop_zeus(true) }
