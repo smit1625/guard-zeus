@@ -186,10 +186,11 @@ module Guard
         opt_parts = []
         opt_parts << options[:cli] unless options[:cli].nil?
         if ( log_parts = opt_parts.select{|part| part =~ /--log/ } ).any?
-          @zeus_logfile = log_parts[-1]
+          @zeus_logfile = log_parts[-1].gsub(/--log /, '').strip
         else
           opt_parts << "--log #{zeus_logfile}"
         end
+        Compat::UI.debug "Zeus command: #{opt_parts.join(' ')}"
         opt_parts.join(' ')
       end
 
