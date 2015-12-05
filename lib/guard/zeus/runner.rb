@@ -40,7 +40,7 @@ module Guard
           # if it's active, use it
           if can_connect_to_socket?
             @reusing_socket = true
-            @zeus_pid = read_pidfile
+            @zeus_pid = read_pid
             Compat::UI.info 'Guard::Zeus is re-using an existing .zeus.sock'
             return
           end
