@@ -283,7 +283,6 @@ module Guard
         p_pid ||= read_pid(p.options[:pid_file]) if p.respond_to?(:options) && p.options[:pid_file]
         p_pid ||= read_pid(pr.options[:pid_file]) if pr && pr.respond_to?(:options) && pr.options[:pid_file]
         return true if p_pid && `ps -p #{p_pid} | wc -l`.strip.to_i == 2
-        Compat::UI.debug 'Nope!'
         false
       end
 
