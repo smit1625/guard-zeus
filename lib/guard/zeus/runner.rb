@@ -271,19 +271,20 @@ module Guard
         end
       end
       def running_zeus_guards
-        zeus_guards.select do |p|
-          Compat::UI.debug "Checking if #{p.name} is still running..."
-          return p.running? if p.respond_to? :running?
-          pr = p.runner if p.respond_to? :runner
-          return pr.running? if pr && pr.respond_to?(:running?)
-          p_pid   = p.pid  if p.respond_to? :pid
-          p_pid ||= pr.pid if pr && pr.respond_to?(:pid)
-          p_pid ||= read_pid(p.options[:pid_file]) if p.respond_to?(:options) && p.options[:pid_file]
-          p_pid ||= read_pid(pr.options[:pid_file]) if pr && pr.respond_to?(:options) && pr.options[:pid_file]
-          return true if p_pid && `ps -p #{p_pid} | wc -l`.strip.to_i == 2
-          Compat::UI.debug 'Nope!'
-          false
-        end
+        zeus_guards.select{|p| zeus_guard_running? p }
+      end
+      def zeus_guard_running?(p)
+        Compat::UI.debug "Checking if #{p.name} is still running..."
+        return p.running? if p.respond_to? :running?
+        pr = p.runner if p.respond_to? :runner
+        return pr.running? if pr && pr.respond_to?(:running?)
+        p_pid   = p.pid  if p.respond_to? :pid
+        p_pid ||= pr.pid if pr && pr.respond_to?(:pid)
+        p_pid ||= read_pid(p.options[:pid_file]) if p.respond_to?(:options) && p.options[:pid_file]
+        p_pid ||= read_pid(pr.options[:pid_file]) if pr && pr.respond_to?(:options) && pr.options[:pid_file]
+        return true if p_pid && `ps -p #{p_pid} | wc -l`.strip.to_i == 2
+        Compat::UI.debug 'Nope!'
+        false
       end
 
       def read_pid(path_to_pid_file=nil)
