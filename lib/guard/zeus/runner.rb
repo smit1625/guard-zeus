@@ -132,6 +132,8 @@ module Guard
             return
           end
           Compat::UI.debug 'Scheduling Zeus to be stopped last'
+          Compat::UI.debug "All Zeus guards: #{zeus_guards.inspect}"
+          Compat::UI.debug "Running Zeus guards: #{running_zeus_guards.inspect}"
           fork {
             wait_for_all_guards_to_stop
             Compat::UI.debug 'Guard::Zeus proceeding to stop Zeus'
@@ -245,13 +247,14 @@ module Guard
       def wait_for_all_guards_to_stop
         wait_for_loop { running_zeus_guards.empty? }
       end
-      def running_zeus_guards
+      def zeus_guards
         Guard.state.session.plugins.all.select do |p|
           plugin_options = p.options if p.respond_to?(:options) && p.options.any?
           plugin_options ||= p.runner.options if p.respond_to?(:runner) && p.runner.respond_to?(:options)
-          plugin_options[:zeus] && p.watchers.any?
+          plugin_options[:zeus]
         end
       end
+      def running_zeus_guards; zeus_guards.select{|p| p.watchers.any? } end
 
       def read_pid; Integer(File.read(pid_file)); rescue ArgumentError; nil end
       def pid_file
