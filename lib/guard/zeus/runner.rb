@@ -53,7 +53,12 @@ module Guard
         end
 
         spawn_zeus zeus_serve_command # , zeus_serve_options
-        wait_for_zeus_to_be_ready
+        if ( boot_success = wait_for_zeus_to_be_ready )
+          Compat::UI.debug 'Guard::Zeus booted successfully.'
+        else
+          Compat::UI.warning 'Timed out waiting for Guard::Zeus to boot.'
+        end
+        boot_success
       end
 
       def run(paths)
