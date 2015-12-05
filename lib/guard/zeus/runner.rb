@@ -4,6 +4,7 @@ require 'tempfile'
 require 'digest/md5'
 
 require 'guard/compat/plugin'
+require 'byebug' # TODO: remove that
 
 module Guard
   class Zeus < Plugin
@@ -134,6 +135,7 @@ module Guard
           Compat::UI.debug 'Scheduling Zeus to be stopped last'
           Compat::UI.debug "All Zeus guards: #{zeus_guards.inspect}"
           Compat::UI.debug "Running Zeus guards: #{running_zeus_guards.inspect}"
+          byebug
           fork {
             wait_for_all_guards_to_stop
             Compat::UI.debug 'Guard::Zeus proceeding to stop Zeus'
