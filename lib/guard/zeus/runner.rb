@@ -52,7 +52,7 @@ module Guard
           delete_logfile 
         end
 
-        spawn_zeus zeus_serve_command, zeus_serve_options
+        spawn_zeus zeus_serve_command # , zeus_serve_options
         wait_for_zeus_to_be_ready
       end
 
@@ -178,7 +178,7 @@ module Guard
       def zeus_serve_command
         cmd_parts = []
         cmd_parts << 'bundle exec' if bundler?
-        cmd_parts << 'zeus start'
+        cmd_parts << 'zeus' << zeus_serve_options << 'start'
         cmd_parts.join(' ')
       end
 
