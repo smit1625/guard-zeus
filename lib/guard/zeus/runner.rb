@@ -268,9 +268,24 @@ module Guard
           plugin_options[:zeus]
         end
       end
-      def running_zeus_guards; zeus_guards.select{|p| p.watchers.any? } end
+      def running_zeus_guards
+        zeus_guards.select do |p|
+          return p.running? if p.respond_to? :running?
+          pr = p.runner if p.respond_to? :runner
+          return pr.running? if pr && pr.respond_to?(:running?)
+          p_pid   = p.pid  if p.respond_to? :pid
+          p_pid ||= pr.pid if pr && pr.respond_to?(:pid)
+          p_pid ||= read_pid(p.options[:pid_file]) if p.respond_to?(:options) && p.options[:pid_file]
+          p_pid ||= read_pid(pr.options[:pid_file]) if pr && pr.respond_to?(:options) && pr.options[:pid_file]
+          return true if p_pid && `ps -p #{p_pid} | wc -l`.strip.to_i == 2
+          false
+        end
+      end
 
-      def read_pid; Integer(File.read(pid_file)); rescue ArgumentError; nil end
+      def read_pid(path_to_pid_file=nil)
+        Integer( File.read( path_to_pid_file ||= pid_file ) )
+      rescue ArgumentError; nil end
+
       def pid_file
         @pid_file ||= File.expand_path( options[:pid_file] || File.join(
           Dir.pwd, 'tmp', 'pids', 'zeus_wrapper.pid' ) )
