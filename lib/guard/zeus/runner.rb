@@ -280,7 +280,7 @@ module Guard
         return pr.running? if pr && pr.respond_to?(:running?)
         p_pid   = p.pid  if p.respond_to? :pid
         p_pid ||= pr.pid if pr && pr.respond_to?(:pid)
-        p_pid ||= read_pid(p.options[:pid_file]) if p.respond_to?(:options) && p.options[:pid_file]
+        p_pid ||= read_pid( p.options[:pid_file]) if p.respond_to?(:options) && p.options[:pid_file]
         p_pid ||= read_pid(pr.options[:pid_file]) if pr && pr.respond_to?(:options) && pr.options[:pid_file]
         return true if p_pid && `ps -p #{p_pid} | wc -l`.strip.to_i == 2
         false
