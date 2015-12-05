@@ -3,6 +3,7 @@ require 'socket'
 require 'tempfile'
 require 'digest/md5'
 require 'json'
+require 'byebug'
 
 require 'guard/compat/plugin'
 
@@ -96,12 +97,12 @@ module Guard
       end
 
       def delete_logfile
-        Compat::UI.info 'Guard::Zeus is deleting an existing logfile'
+        Compat::UI.debug 'Guard::Zeus is deleting an existing logfile'
         File.delete(zeus_logfile)
       end
 
       def delete_pidfile
-        Compat::UI.info 'Guard::Zeus is deleting an existing pidfile'
+        Compat::UI.debug 'Guard::Zeus is deleting an existing pidfile'
         File.delete(pid_file)
       end
 
@@ -254,6 +255,7 @@ module Guard
       def wait_for_action; sleep sleep_time end
       def wait_for_zeus_to_be_ready; wait_for_loop { zeus_ready? } end
       def wait_for_all_guards_to_stop
+        byebug
         if status = wait_for_loop { running_zeus_guards.empty? }
           Compat::UI.debug 'All Zeus guards stopped successfully'
         else
