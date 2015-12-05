@@ -206,17 +206,18 @@ module Guard
       end
 
       def zeus_processes
-        return @zeus_processes if @zeus_processes
-        unbooted_processes = search_zeus_logfile('unbooted')
-        return [] if unbooted_processes.empty?
-        @zeus_processes = unbooted_processes
+        search_zeus_logfile('unbooted')
+        # return @zeus_processes if @zeus_processes
+        # unbooted_processes = search_zeus_logfile('unbooted')
+        # return [] if unbooted_processes.empty?
+        # @zeus_processes = unbooted_processes
       end
       def zeus_ready_processes
         search_zeus_logfile('SReady')
       end
 
       def zeus_booted?
-        zeus_processes.any?
+        zeus_ready_processes.any?
       end
       def zeus_ready?
         return true if @zeus_ready
