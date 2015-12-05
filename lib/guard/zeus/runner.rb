@@ -254,9 +254,10 @@ module Guard
       def wait_for_action; sleep sleep_time end
       def wait_for_zeus_to_be_ready; wait_for_loop { zeus_ready? } end
       def wait_for_all_guards_to_stop
-        # byebug
-        if ( status = wait_for_loop { running_zeus_guards.empty? } )
-          Compat::UI.debug 'All Zeus guards stopped successfully'
+        status = wait_for_loop {
+          Compat::UI.debug "Running guards: #{rg = running_zeus_guards}"
+          rg.empty? }
+        if status then Compat::UI.debug 'All Zeus guards stopped successfully'
         else
           Compat::UI.warning "Timed out waiting for Zeus guards to stop: #{running_zeus_guards.map(&:name)}"
         end
@@ -271,6 +272,7 @@ module Guard
       end
       def running_zeus_guards
         zeus_guards.select do |p|
+          Compat::UI.debug "Checking if #{p.name} is still running..."
           return p.running? if p.respond_to? :running?
           pr = p.runner if p.respond_to? :runner
           return pr.running? if pr && pr.respond_to?(:running?)
@@ -279,6 +281,7 @@ module Guard
           p_pid ||= read_pid(p.options[:pid_file]) if p.respond_to?(:options) && p.options[:pid_file]
           p_pid ||= read_pid(pr.options[:pid_file]) if pr && pr.respond_to?(:options) && pr.options[:pid_file]
           return true if p_pid && `ps -p #{p_pid} | wc -l`.strip.to_i == 2
+          Compat::UI.debug 'Nope!'
           false
         end
       end
