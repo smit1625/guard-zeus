@@ -190,7 +190,6 @@ module Guard
         else
           opt_parts << "--log #{zeus_logfile}"
         end
-        Compat::UI.debug "Zeus command: #{opt_parts.join(' ')}"
         opt_parts.join(' ')
       end
 
@@ -200,7 +199,10 @@ module Guard
 
       def search_zeus_logfile(pattern)
         return [] unless File.exist? zeus_logfile
-        `awk '#{pattern.to_s}{print $0}' #{zeus_logfile} | awk '{print $4}' | cut -d '/' -f 1`.strip.lines
+        cmd = "awk '#{pattern.to_s}{print $0}' #{zeus_logfile}"
+        cmd << " | awk '{print $4}' | cut -d '/' -f 1"
+        Compat::UI.debug "Zeus log search command: #{cmd}"
+        `#{cmd}`.strip.lines
       end
 
       def zeus_processes
