@@ -201,7 +201,7 @@ module Guard
         return [] unless File.exist? zeus_logfile
         cmd = "awk '/#{pattern_str}/{print $0}' #{zeus_logfile}"
         cmd << " | awk '{print $4}' | cut -d '/' -f 1"
-        Compat::UI.debug "Zeus log search command: #{cmd}"
+        # Compat::UI.debug "Zeus log search command: #{cmd}"
         `#{cmd}`.strip.lines
       end
 
