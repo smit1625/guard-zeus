@@ -253,7 +253,7 @@ module Guard
       def wait_for_action; sleep sleep_time end
       def wait_for_zeus_to_be_ready; wait_for_loop { zeus_ready? } end
       def wait_for_all_guards_to_stop
-        if ( status = wait_for_loop { rg.empty? } )
+        if ( status = wait_for_loop { running_zeus_guards.empty? } )
           Compat::UI.debug 'All Zeus guards stopped successfully'
         else
           Compat::UI.warning "Timed out waiting for Zeus guards to stop: #{running_zeus_guards.map(&:name)}"
