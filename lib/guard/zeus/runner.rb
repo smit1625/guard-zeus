@@ -298,7 +298,7 @@ module Guard
         return @zeus_json_path = app_json_path if File.exist? app_json_path
         zeus_path = `which zeus`.strip
         gems_dir = File.join zeus_path, '..', '..', 'gems'
-        zeus_gem_dir = File.join gems_dir, "zeus-#{Zeus::VERSION}"
+        zeus_gem_dir = File.join gems_dir, "zeus-#{::Zeus::VERSION}"
         default_json_path = File.join zeus_gem_dir, 'examples', 'zeus.json'
         return unless File.exist? default_json_path
         @zeus_json_path = default_json_path
