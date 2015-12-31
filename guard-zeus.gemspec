@@ -3,7 +3,7 @@ require File.expand_path('../lib/guard/zeus/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "guard-zeus"
-  gem.version       = Guard::ZeusVersion::VERSION
+  gem.version       = Guard::Zeus::VERSION
   gem.version       = "#{gem.version}-alpha-#{ENV['TRAVIS_BUILD_NUMBER']}" if ENV['TRAVIS']
   gem.platform      = Gem::Platform::RUBY
   gem.authors       = ["jonathangreenberg", "Andrew Assarattanakul", "Rob Sharp"]
