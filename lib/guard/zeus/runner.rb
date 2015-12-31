@@ -265,7 +265,7 @@ module Guard
         Guard.state.session.plugins.all.select do |p|
           plugin_options = p.options if p.respond_to?(:options) && p.options.any?
           plugin_options ||= p.runner.options if p.respond_to?(:runner) && p.runner.respond_to?(:options)
-          plugin_options[:zeus]
+          plugin_options[:zeus] if plugin_options
         end
       end
       def running_zeus_guards
