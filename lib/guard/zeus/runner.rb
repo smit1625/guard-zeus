@@ -3,6 +3,7 @@ require 'socket'
 require 'tempfile'
 require 'digest/md5'
 require 'json'
+require 'zeus'
 
 require 'guard/compat/plugin'
 
